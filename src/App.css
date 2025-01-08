@@ -1,0 +1,9 @@
+::-webkit-scrollbar,
+::-moz-scrollbar,
+::-ms-scrollbar,
+::-o-scrollbar {
+    width: 0px !important;
+}
+::-webkit-scrollbar {
+    width: 0 !important;
+}
