@@ -64,7 +64,7 @@ const HomePage = () => {
     };
 
     const generateCalendarDays = () => {
-        var todayInEng = new Date(); // will replace all occurrances with currentDate later
+        var todayInEng = currentDate; // new Date();
         var firstDayOfMonthInEng = new Date();
 
         firstDayOfMonthInEng.setDate(
@@ -76,6 +76,20 @@ const HomePage = () => {
 
         const startWeekDay = firstDayOfMonthInEng.getDay();
         const totalDaysInCurrentMonth = getDaysInMonth(todayInEng);
+        const engMonths = [
+            "JAN",
+            "FEB",
+            "MAR",
+            "APR",
+            "MAY",
+            "JUN",
+            "JUL",
+            "AUG",
+            "SEP",
+            "OCT",
+            "NOV",
+            "DEC",
+        ];
         const days = [];
 
         for (let i = 0; i < startWeekDay; i++) {
@@ -84,7 +98,11 @@ const HomePage = () => {
 
         var today = firstDayOfMonthInEng;
         for (let i = 0; i < totalDaysInCurrentMonth; i++) {
-            let englishDate = today.getDate();
+            let englishDate = [
+                today.getDate(),
+                "  ",
+                engMonths[today.getMonth()],
+            ];
             let banglaDate = calendar.convertGregorianToBangla(today).day;
             days.push({ banglaDate: banglaDate, englishDate: englishDate });
 
@@ -121,14 +139,31 @@ const HomePage = () => {
 
     const nextMonth = () => {
         const nextDate = new Date(currentDate);
-        nextDate.setMonth(currentDate.getMonth() + 1);
+        var daysLeft =
+            getDaysInMonth(currentDate) -
+            convertToEnglishNumerals(
+                calendar.convertGregorianToBangla(currentDate).day,
+            );
+        console.log(`daysLeft=${daysLeft}`);
+        nextDate.setDate(currentDate.getDate() + daysLeft + 1);
+
         setCurrentDate(nextDate);
         setSelectedDate(null);
     };
 
     const previousMonth = () => {
         const prevDate = new Date(currentDate);
-        prevDate.setMonth(currentDate.getMonth() - 1);
+        var daysPassed = convertToEnglishNumerals(
+            calendar.convertGregorianToBangla(currentDate).day,
+        );
+
+        var tmpDate = new Date();
+        tmpDate.setDate(tmpDate.getDate() - daysPassed - 1); // prev month reached
+
+        daysPassed += getDaysInMonth(tmpDate); // going to day 1 of prev month
+        console.log(`daysPassed=${daysPassed}`);
+        prevDate.setDate(currentDate.getDate() - daysPassed);
+
         setCurrentDate(prevDate);
         setSelectedDate(null);
     };
@@ -295,11 +330,10 @@ const HomePage = () => {
                                 }
 
                                 const isToday =
-                                    day.banglaDate === currentBanglaDate.day;
-                                // &&
-                                // calendar.convertGregorianToBangla(
-                                //     new Date(),
-                                // ).month === currentBanglaDate.month;
+                                    day.banglaDate === currentBanglaDate.day &&
+                                    calendar.convertGregorianToBangla(
+                                        new Date(),
+                                    ).month === currentBanglaDate.month;
 
                                 const isSelected =
                                     selectedDate &&
@@ -316,7 +350,7 @@ const HomePage = () => {
                                             day.banglaDate
                                                 ? "hover:bg-gray-50 cursor-pointer"
                                                 : ""
-                                        } ${isToday ? "bg-blue-50" : ""} ${
+                                        } ${isToday ? "bg-sky-100 hover:bg-sky-100 rounded-md" : ""} ${
                                             isSelected ? "bg-blue-100" : ""
                                         }`}
                                     >
