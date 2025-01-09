@@ -20,6 +20,8 @@ import Home from "./pages/Home/Home";
 
 // import NotFound from "./pages/404";
 import "./App.css";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const App = () => {
     return (
@@ -55,6 +57,8 @@ const App = () => {
                 */}
 
                 {/* <Route path="*" element={<NotFound />} /> */}
+                <Analytics />
+                <SpeedInsights />
             </Routes>
         </Router>
         // {/* </DarkModeProvider> */}
